@@ -1,0 +1,5 @@
+db 생성 예정
+1. mysql 연결
+2. 테이블은 2개
+ 1) mytable-id,title,content
+ 2) mycomment-id(외래키 전송), content
