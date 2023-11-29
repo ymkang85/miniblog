@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import PostList from "../list/PostList";
 import Button from "../ui/Button";
-import data from '../../data.json';
+import axios from "axios";
 
-function MainPage(props) {
-    const { } = props;
+function MainPage() {
+    const [messages, setMessages] = useState([]);
+
+    useEffect(() => {
+        const fetch = async () => {
+            try {
+                const res = await axios.get("http://localhost:5000");
+                setMessages(res.data);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        fetch();
+    }, [])
 
     const navigate = useNavigate();
 
@@ -15,13 +27,10 @@ function MainPage(props) {
             <Container>
                 <Button title="글 작성하기" onClick={() => {
                     navigate("/post-write");
-                }}
-                />
-
-                <PostList posts={data} onClickItem={(item) => {
-                    navigate(`/post/${item.id}`);
-                }}
-                />
+                }} />                
+                    <PostList posts={messages} key={0} onClickItem={() => {
+                        navigate(`/post/${messages[0].id}`);
+                    }} />
             </Container>
         </Wrapper>
     );

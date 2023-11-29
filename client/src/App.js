@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import axios from 'axios';
 import styled from 'styled-components';
@@ -7,15 +7,7 @@ import PostWritePage from "./component/page/PostWritePage";
 import PostViewPage from "./component/page/PostViewPage";
 
 function App(props) {
-  // const callApi = async()=>{
-  //   // eslint-disable-next-line no-undef
-  //   axios.get("/api").then((res)=>{console.log(res.data.test)});
-  // };
-
-  // useEffect(()=>{
-  //   callApi();
-  // }, []);
-
+  
   return (
     <BrowserRouter>
       <MainTitleText>미니블로그 연습중</MainTitleText>
