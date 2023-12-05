@@ -18,7 +18,7 @@ function MainPage() {
             }
         }
         fetch();
-    }, [])
+    }, []);
 
     const navigate = useNavigate();
 

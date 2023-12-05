@@ -16,7 +16,6 @@ function PostViewPage(props) {
             axios.get(`http://localhost:5000/${postId}`)
                 .then((res) => {
                     setDataDB(res.data[0]);
-                    console.log(res.data);
                 })
                 .catch((err) => {
                     console.error(err);

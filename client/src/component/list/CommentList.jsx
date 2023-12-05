@@ -1,16 +1,30 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components';
+import axios from 'axios';
 import CommentListItem from './CommentListItem';
 
-function CommentList(props){
-    const {comments} = props;
-    console.log(comments);
+function CommentList(props) {
+    const { comments } = props;
+    const [dbData, setDbData] = useState([]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(`http://localhost:5000/post/${comments}`);
+                setDbData(res.data || []); 
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        fetchData();
+    }, [comments]); 
+    
     return (
         <Wrapper>
-            {/* {comments.map((comment, index) =>{
-                return <CommentListItem key={index} comment = {comment} />
-            })} */}
+            {dbData.map((comment, index) => (
+                <CommentListItem key={index} comment={comment} />
+            ))}
         </Wrapper>
     );
 }

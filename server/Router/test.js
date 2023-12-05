@@ -32,11 +32,11 @@ router.get('/post/:id', (req, res) => {
   const num = req.params.id;
   console.log(num);
   const sql = "select * from commentdb where datadb_id = ?";
-  conn.query(sql, num, (err, res, fields) => {
+  conn.query(sql, num, (err, rs, fields) => {
     if (err) {
       console.log(err);
     } else {
-      res.send(res);
+      res.send(rs);
     }
   })
 })
