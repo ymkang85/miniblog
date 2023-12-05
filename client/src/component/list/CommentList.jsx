@@ -3,13 +3,14 @@ import styled from 'styled-components';
 import CommentListItem from './CommentListItem';
 
 function CommentList(props){
-    const { comments } = props;
+    const {comments} = props;
+    console.log(comments);
 
     return (
         <Wrapper>
-            {comments.map((comment, index) =>{
-                return <CommentListItem key={comment.id} comment = {comment} />
-            })}
+            {/* {comments.map((comment, index) =>{
+                return <CommentListItem key={index} comment = {comment} />
+            })} */}
         </Wrapper>
     );
 }

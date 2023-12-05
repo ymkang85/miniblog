@@ -27,10 +27,10 @@ function MainPage() {
             <Container>
                 <Button title="글 작성하기" onClick={() => {
                     navigate("/post-write");
-                }} />                
-                    <PostList posts={messages} key={0} onClickItem={() => {
-                        navigate(`/post/${messages[0].id}`);
-                    }} />
+                }} />
+                <PostList posts={messages} key={0} onClickItem={(item) => {
+                    navigate(`/post/${item.id}`);
+                }} />
             </Container>
         </Wrapper>
     );
@@ -49,11 +49,9 @@ const Container = styled.div`
     width: 100%;
     max-width: 720px;
 
-    & > * {
-        : not(:last-child){
+    & > *:not(:last-child){
             margin-bottom : 16px;
-        }
-    }
+            }
 `;
 
 export default MainPage

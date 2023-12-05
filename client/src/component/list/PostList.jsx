@@ -7,10 +7,10 @@ function PostList(props) {
 
     return (
         <Wrapper>
-            {posts.map((post, index) => {
+            {posts.map((post, i) => {
                 return (
                     <PostListItem
-                        key={post.id}
+                        key={i}
                         post={post}
                         onClick={() => {
                             onClickItem(post);

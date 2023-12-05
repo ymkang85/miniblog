@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import styled from 'styled-components';
 import CommentList from "../list/CommentList";
 import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
-import data from "../../data.json";
+import axios from 'axios';
 
 function PostViewPage(props) {
     const navigate = useNavigate();
     const { postId } = useParams();
+    const [dataDB, setDataDB] = useState({});
 
-    const post = data.find((item) => {
-        return item.id == postId;
-    });
+    useEffect(() => {
+        const fetch = () => {
+            axios.get(`http://localhost:5000/${postId}`)
+                .then((res) => {
+                    setDataDB(res.data[0]);
+                    console.log(res.data);
+                })
+                .catch((err) => {
+                    console.error(err);
+                })
+        }
+        fetch();
+    }, []);
 
     const [comment, setComment] = useState("");
 
@@ -24,19 +35,19 @@ function PostViewPage(props) {
                 }}
                 />
                 <PostContainer>
-                    <TitleText>{post.title}</TitleText>
-                    <ContentText>{post.content}</ContentText>
+                    <TitleText>{dataDB.title}</TitleText>
+                    <ContentText>{dataDB.content}</ContentText>
                 </PostContainer>
 
                 <CommentLabel>댓글</CommentLabel>
-                <CommentList comments={post.comments} />
+                <CommentList comments={postId} />
 
                 <TextInput height={40} value={comment} onChange={(e) => {
                     setComment(e.target.value);
                 }}
                 />
                 <Button title="댓글 작성하기" onClick={() => {
-                    navigate("/");
+                    navigate("/comment-write");
                 }}
                 />
             </Container>
@@ -46,7 +57,7 @@ function PostViewPage(props) {
 
 const Wrapper = styled.div`
     padding: 16px;
-    width: cacl(100%-32px);
+    width: calc(100%-32px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -57,11 +68,9 @@ const Container = styled.div`
     width: 100%;
     max-width: 720px;
 
-    & > * {
-        :not(:last-child){
-            margin-bottom: 16px;
-        }
-    }
+    & > *:not(:last-child){
+            margin-bottom : 16px;
+            }
 `;
 
 const PostContainer = styled.div`

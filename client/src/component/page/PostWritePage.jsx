@@ -4,29 +4,30 @@ import styled from 'styled-components';
 import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
 
-function PostWritePage(props) {
+function PostWritePage() {
     const navigate = useNavigate();
 
     const { title, setTitle } = useState("");
     const { content, setContent } = useState("");
-
     return (
         <Wrapper>
             <Container>
-                <TextInput height={20} vlaue={title} onChange={(e) => {
-                    setTitle(e.target.vlaue);
-                }}
-                />
+                <form type="post">
+                    <TextInput height={20} value={title} onChange={(e) => {
+                        setTitle(e.target.value);
+                    }}
+                    />
 
-                <TextInput height={480} vlaue={content} onChange={(e) => {
-                    setContent(e.target.vlaue);
-                }}
-                />
+                    <TextInput height={480} value={content} onChange={(e) => {
+                        setContent(e.target.value);
+                    }}
+                    />
 
-                <Button title="글 작성하기" onClick={() => {
-                    navigate("/");
-                }}
-                />
+                    <Button title="글 작성하기" onClick={() => {
+                        navigate("/");
+                    }}
+                    />
+                </form>
             </Container>
         </Wrapper>
     );
