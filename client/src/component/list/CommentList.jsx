@@ -22,9 +22,11 @@ function CommentList(props) {
     
     return (
         <Wrapper>
+            <div>
             {dbData.map((comment, index) => (
                 <CommentListItem key={index} comment={comment} />
             ))}
+            </div>
         </Wrapper>
     );
 }
@@ -36,7 +38,7 @@ const Wrapper = styled.div`
     justify-content: center;
 
     & > * {
-        : not(:last-child){
+        :not(:last-child){
             margin-bottom: 16px;
         }
     }

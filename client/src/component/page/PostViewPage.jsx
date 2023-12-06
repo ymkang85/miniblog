@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
+import { Form, useNavigate, useParams } from "react-router-dom";
 import styled from 'styled-components';
 import CommentList from "../list/CommentList";
 import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
 import axios from 'axios';
 
-function PostViewPage(props) {
+function PostViewPage() {
     const navigate = useNavigate();
     const { postId } = useParams();
     const [dataDB, setDataDB] = useState({});
@@ -26,6 +26,24 @@ function PostViewPage(props) {
 
     const [comment, setComment] = useState("");
 
+    const handlesubmit = (e) => {
+        e.preventDefault();
+        submitComment(comment);
+    }
+
+    const submitComment = (comment) => {
+        axios.post('http://localhost:5000/comment-write', {
+            id: postId,
+            content: comment
+        })
+            .then((res) => {
+                console.dir(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
     return (
         <Wrapper>
             <Container>
@@ -36,19 +54,22 @@ function PostViewPage(props) {
                 <PostContainer>
                     <TitleText>{dataDB.title}</TitleText>
                     <ContentText>{dataDB.content}</ContentText>
+
+                    {/* 수정,삭제작업필요! */}
+                    <Button title="수정" />
+                    <Button title="삭제" />
+                    {/* 수정,삭제작업필요! */}
+                    
                 </PostContainer>
-
                 <CommentLabel>댓글</CommentLabel>
+                <form method='post' onSubmit={handlesubmit}>
+                    <TextInput height={40} value={comment} onChange={(e) => {
+                        setComment(e.target.value);
+                    }} />
+                    <Button title="댓글 작성하기" type="submit" />
+                </form>
+                <CommentLabel>전체 댓글</CommentLabel>
                 <CommentList comments={postId} />
-
-                <TextInput height={40} value={comment} onChange={(e) => {
-                    setComment(e.target.value);
-                }}
-                />
-                <Button title="댓글 작성하기" onClick={() => {
-                    navigate("/comment-write");
-                }}
-                />
             </Container>
         </Wrapper>
     );

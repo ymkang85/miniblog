@@ -1,11 +1,22 @@
 import React from 'react'
 import styled from 'styled-components'
+import Button from '../ui/Button';
 
-function CommentListItem(props){
+function CommentListItem(props) {
     const { comment } = props;
-    return(
+    return (
         <Wrapper>
-            <ContentText>{comment.content}</ContentText>
+            <ContentText >
+                {comment.content}
+                <div style={{width:'100%', height:'100%', marginTop:'20px', marginBottom:'0'}}>
+
+                    {/* 수정,삭제작업필요! */}
+                    <Button title="수정" />
+                    <Button title="삭제" />
+                    {/* 수정,삭제작업필요! */}
+                    
+                </div>
+            </ContentText>
         </Wrapper>
     );
 }
@@ -29,6 +40,7 @@ const Wrapper = styled.div`
 const ContentText = styled.p`
     font-size: 16px;
     white-space: pre-wrap;
+
 `;
 
 export default CommentListItem
