@@ -23,6 +23,7 @@ function PostWritePage() {
         })
             .then((res) => {
                 console.dir(res);
+                navigate('/');
             })
             .catch((err) => {
                 console.log(err);

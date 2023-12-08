@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from 'styled-components';
 import CommentList from "../list/CommentList";
 import TextInput from "../ui/TextInput";
@@ -10,6 +10,9 @@ function PostViewPage() {
     const navigate = useNavigate();
     const { postId } = useParams();
     const [dataDB, setDataDB] = useState({});
+    const [btnClick, setBtnClick] = useState(true);
+    const [title, setTitle] = useState();
+    const [content, setContent] = useState();
 
     useEffect(() => {
         const fetch = () => {
@@ -26,7 +29,7 @@ function PostViewPage() {
 
     const [comment, setComment] = useState("");
 
-    const handlesubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         submitComment(comment);
     }
@@ -38,11 +41,58 @@ function PostViewPage() {
         })
             .then((res) => {
                 console.dir(res);
+                navigate(`/post/${postId}`);
             })
             .catch((err) => {
                 console.log(err);
             });
     };
+
+    const handleClick = () => {
+        setBtnClick(prevState => {
+            return !prevState;
+        });
+    }
+
+    const handleUpdateSubmit = (e) => {
+        e.preventDefault();
+        handleUpdate(title, content);
+    }
+    
+    const handleUpdate = (title, content) => {
+        axios.post(`http://localhost:5000/update/${postId}`, {
+            title : title ||   dataDB.title,
+            content : content || dataDB.content
+        })
+        .then((res) => {
+            console.dir(res);       
+            setBtnClick(false);         
+            navigate(`/post/${postId}`);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    const handleDelete = () => {
+        if (window.confirm("삭제할 경우 해당 글의 댓글도 모두 삭제됩니다. 정말 삭제하시겠습니까?")) {
+            axios.post(`http://localhost:5000/delete`, {
+                id: postId
+            })
+                .then((res) => {
+                    console.dir(res);
+                    navigate(`/post/${postId}`);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            alert("모두 삭제가 되었습니다.");
+        } else {
+            alert("삭제를 취소합니다.");
+            return;
+        }
+    }
+
 
     return (
         <Wrapper>
@@ -52,21 +102,33 @@ function PostViewPage() {
                 }}
                 />
                 <PostContainer>
-                    <TitleText>{dataDB.title}</TitleText>
-                    <ContentText>{dataDB.content}</ContentText>
-
-                    {/* 수정,삭제작업필요! */}
-                    <Button title="수정" />
-                    <Button title="삭제" />
-                    {/* 수정,삭제작업필요! */}
-                    
-                </PostContainer>
-                <CommentLabel>댓글</CommentLabel>
-                <form method='post' onSubmit={handlesubmit}>
+                    {btnClick ? (
+                        <>
+                            <TitleText>{dataDB.title}</TitleText>
+                            <ContentText>{dataDB.content}</ContentText>
+                            <Button title="수정" onClick={handleClick} />
+                            <Button title="삭제" onClick={handleDelete} />
+                        </>
+                    ) : (
+                        <>
+                            <form method='post' onSubmit={handleUpdateSubmit}>
+                                <textarea style={{ width: "400px", height: "40px", fontSize: "16px" }} onChange={(e) => { setTitle(e.target.value); }} >{dataDB.title}</textarea>
+                                <textarea style={{ width: "400px", height: "40px", fontSize: "16px" }} onChange={(e) => { setContent(e.target.value); }} >{dataDB.content}</textarea>
+                                <div>
+                                    <Button title="저장" type="submit" />
+                                    <Button title="취소" onClick={handleClick} />
+                                </div>
+                            </form>
+                        </>
+                    )}
+                </PostContainer>                
+                <form method='post' onSubmit={handleSubmit}>
+                    <Button title="댓글 작성하기" type="submit" />
+                    <br />
+                    <br />
                     <TextInput height={40} value={comment} onChange={(e) => {
                         setComment(e.target.value);
                     }} />
-                    <Button title="댓글 작성하기" type="submit" />
                 </form>
                 <CommentLabel>전체 댓글</CommentLabel>
                 <CommentList comments={postId} />
@@ -76,43 +138,43 @@ function PostViewPage() {
 }
 
 const Wrapper = styled.div`
-    padding: 16px;
-    width: calc(100%-32px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-`;
+                padding: 16px;
+                width: calc(100%-32px);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                `;
 
 const Container = styled.div`
-    width: 100%;
-    max-width: 720px;
+                width: 100%;
+                max-width: 720px;
 
     & > *:not(:last-child){
-            margin-bottom : 16px;
+                    margin-bottom : 16px;
             }
-`;
+                `;
 
 const PostContainer = styled.div`
-    padding: 8px 16px;
-    border: 1px solid grey;
-    border-radius: 8px;
-`;
+                padding: 8px 16px;
+                border: 1px solid grey;
+                border-radius: 8px;
+                `;
 
 const TitleText = styled.p`
-    font-size: 28px;
-    font-weight: 500;
-`;
+                font-size: 28px;
+                font-weight: 500;
+                `;
 
 const ContentText = styled.p`
-    font-size: 20px;
-    line-height: 32px;
-    white-space: pre-wrap;
-`;
+                font-size: 20px;
+                line-height: 32px;
+                white-space: pre-wrap;
+                `;
 
 const CommentLabel = styled.p`
-    font-size: 16px;
-    font-weight: 500;
-`;
+                font-size: 16px;
+                font-weight: 500;
+                `;
 
 export default PostViewPage
