@@ -24,15 +24,7 @@ router.get('/:id', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      sql = "select * from commentdb where datadb_id = ?";
-      conn.query(sql, id, (err, row, fields) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("글과 코멘트 검색성공");
-        }
-        res.send(rs);
-      })
+      res.json(rs);
     }
   })
 });
@@ -46,7 +38,7 @@ router.get('/post/:id', (req, res) => {
     } else {
       console.log('검색성공');
     }
-    res.send(rs);
+    res.json(rs);
   })
 });
 
@@ -64,7 +56,7 @@ router.post("/post-write", (req, res) => {
     } else {
       console.log('글쓰기 성공');
     }
-    res.send(rs);
+    res.send(row);
   })
 });
 
@@ -83,7 +75,7 @@ router.post("/delete", (req, res) => {
         } else {
           console.log('삭제성공');
         }
-        res.send(row);
+        res.json(row);
       })
     }
   })
@@ -103,7 +95,7 @@ router.post("/update/:id", (req, res) => {
       else {
         console.log('업데이트 성공');
       }
-      res.send(row);
+      res.json(row);
     });
 });
 
@@ -118,13 +110,8 @@ router.post("/comment-write", (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      if (row[0].max === null) {
-        rs.id = rs.id.toString();
-        row[0].max = 0;
-      } else {
-        rs.id = rs.id.toString();
-        row[0].max = parseInt((row[0].max).toString().substr(rs.id.length));
-      }
+      console.log(rs.content);
+      row[0].max === null ? row[0].max = 0 : row[0].max = parseInt((row[0].max).toString().substr(rs.id.length));
       sql = "insert into commentDb(id, content, datadb_id) values(?,?,?)";
       conn.query(sql, [rs.id + (row[0].max + 1), rs.content, parseInt(rs.id)], (err, rows, fields) => {
         if (err) {
@@ -132,7 +119,7 @@ router.post("/comment-write", (req, res) => {
         } else {
           console.log('코멘트 입력완료!!');
         }
-        res.send(rows);
+        res.json(rows);
       });
     }
   });

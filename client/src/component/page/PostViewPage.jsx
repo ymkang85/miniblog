@@ -14,22 +14,24 @@ function PostViewPage() {
     const [title, setTitle] = useState();
     const [content, setContent] = useState();
 
+    const fetch = () => {
+        axios.get(`http://localhost:5000/${postId}`)
+            .then((res) => {
+                setDataDB(res.data[0]);
+                console.dir(dataDB);
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+    }
+
     useEffect(() => {
-        const fetch = () => {
-            axios.get(`http://localhost:5000/${postId}`)
-                .then((res) => {
-                    setDataDB(res.data[0]);
-                })
-                .catch((err) => {
-                    console.error(err);
-                })
-        }
-        fetch();
-    }, []);
+        fetch();       
+    })
 
     const [comment, setComment] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleCommentSubmit = (e) => {
         e.preventDefault();
         submitComment(comment);
     }
@@ -41,7 +43,7 @@ function PostViewPage() {
         })
             .then((res) => {
                 console.dir(res);
-                navigate(`/post/${postId}`);
+                navigate('/');
             })
             .catch((err) => {
                 console.log(err);
@@ -58,16 +60,16 @@ function PostViewPage() {
         e.preventDefault();
         handleUpdate(title, content);
     }
-    
+
     const handleUpdate = (title, content) => {
         axios.post(`http://localhost:5000/update/${postId}`, {
-            title : title ||   dataDB.title,
-            content : content || dataDB.content
+            title: title || dataDB.title,
+            content: content || dataDB.content
         })
-        .then((res) => {
-            console.dir(res);       
-            setBtnClick(false);         
-            navigate(`/post/${postId}`);
+            .then((res) => {
+                console.dir(res);
+                fetch();
+                handleClick();
             })
             .catch((err) => {
                 console.log(err);
@@ -81,7 +83,7 @@ function PostViewPage() {
             })
                 .then((res) => {
                     console.dir(res);
-                    navigate(`/post/${postId}`);
+                    navigate('/');
                 })
                 .catch((err) => {
                     console.log(err);
@@ -92,7 +94,6 @@ function PostViewPage() {
             return;
         }
     }
-
 
     return (
         <Wrapper>
@@ -121,8 +122,8 @@ function PostViewPage() {
                             </form>
                         </>
                     )}
-                </PostContainer>                
-                <form method='post' onSubmit={handleSubmit}>
+                </PostContainer>
+                <form method='post' onSubmit={handleCommentSubmit}>
                     <Button title="댓글 작성하기" type="submit" />
                     <br />
                     <br />
@@ -149,10 +150,12 @@ const Wrapper = styled.div`
 const Container = styled.div`
                 width: 100%;
                 max-width: 720px;
-
-    & > *:not(:last-child){
-                    margin-bottom : 16px;
-            }
+                    &  {
+                        :not(:last-child) 
+                        {
+                            margin-bottom: 16px;
+                        }
+                        }
                 `;
 
 const PostContainer = styled.div`

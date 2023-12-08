@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from '../ui/Button';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function CommentListItem(props) {
     const { comment } = props;
     const [btnClick, setBtnClick] = useState(true);
     const [commentData, setCommentData] = useState(comment.content);
     const { postId } = useParams();
+    const navigator = useNavigate();
 
     const handleClick = () => {
         setBtnClick(prevState => {
@@ -29,6 +30,7 @@ function CommentListItem(props) {
                     console.log(err);
                 });
             alert("댓글이 삭제 되었습니다.");
+            navigator('/');
         } else {
             alert("삭제를 취소합니다.");
             return;
@@ -47,6 +49,7 @@ function CommentListItem(props) {
         })
             .then((res) => {
                 console.dir(res);
+                navigator('/');
             })
             .catch((err) => {
                 console.log(err);
